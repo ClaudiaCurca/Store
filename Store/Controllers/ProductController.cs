@@ -38,9 +38,7 @@ namespace Store.Controllers
             return View(productDetails);
         }
 
-      
-
-        [HttpPost]
+        [HttpPost,ActionName("Edit")]
         public  IActionResult Edit(int id, [Bind("Id,Name,Price")] Product product)
         {
             if (!ModelState.IsValid)
@@ -48,6 +46,37 @@ namespace Store.Controllers
                 return View(product);
             }
             storeService.UpdateProd(id, product);
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Details(int id)
+        {
+            var productDetails = storeService.GetProductById(id);
+            if (productDetails == null)
+            {
+                return View("NotFound");
+            }
+            return View(productDetails);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var cinemaDetails = storeService.GetProductById(id);
+            if (cinemaDetails == null)
+            {
+                return View("NotFound");
+            }
+            return View(cinemaDetails);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var cinemaDetails = storeService.GetProductById(id);
+            if (cinemaDetails == null)
+            {
+                return View("NotFound");
+            }
+            storeService.DeleteProductById(id);
             return RedirectToAction(nameof(Index));
         }
 
