@@ -5,7 +5,7 @@ namespace Store.Services
 {
     public class StoreService
     {
-        List<Product> products = new List<Product>
+        static List<Product> products = new List<Product>
         {
             new Product{Id=1,Name="cercei",Price=15},
             new Product{Id=2,Name="colier",Price=50},
