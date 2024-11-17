@@ -22,12 +22,26 @@ namespace Store.Controllers
             var allProducts = storeService.GetProducts();
             return View(allProducts);
         }
+        
+        public IActionResult Create()
+        {
+			return View();
+        }
+		[HttpPost]
+		public IActionResult Create([Bind("Id,Name,Price")] Product product)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(product);
+			}
+            storeService.CreateProd(product);
+			return RedirectToAction(nameof(Index));
+		}
 
-        [HttpGet]
+		[HttpGet]
         public List<Product> GetAllProducts()
         {
             var products = storeService.GetProducts();
-            //_context.SaveChanges();
             return products;
         }
         public IActionResult Edit(int id)
@@ -37,7 +51,6 @@ namespace Store.Controllers
             {
                 return View("NotFound");
             }
-            //_context.SaveChanges();
             return View(productDetails);
         }
 
@@ -49,7 +62,6 @@ namespace Store.Controllers
                 return View(product);
             }
             storeService.UpdateProd(id, product);
-            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Details(int id)
@@ -81,7 +93,6 @@ namespace Store.Controllers
                 return View("NotFound");
             }
             storeService.DeleteProductById(id);
-            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 

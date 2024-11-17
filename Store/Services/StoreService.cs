@@ -20,6 +20,7 @@ namespace Store.Services
         public Product CreateProd(Product product)
         {
             _context.Products.Add(product);
+            _context.SaveChanges();
             return product;
         }
 
@@ -30,6 +31,7 @@ namespace Store.Services
             {
                 prod.Name=product.Name;
                 prod.Price=product.Price;
+                _context.SaveChanges();
                 return true;
             }
             
@@ -56,6 +58,7 @@ namespace Store.Services
             if (prod != null) 
             { 
                 _context.Products.Remove(prod);
+                _context.SaveChanges();
                 return true;
             }
 
