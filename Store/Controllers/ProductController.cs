@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Store.Models;
 
 namespace Store.Controllers
@@ -7,13 +6,15 @@ namespace Store.Controllers
 
     public class ProductController : Controller
     {
+        public readonly StoreContext _context;
         private readonly Services.StoreService storeService;
         private readonly ILogger<HomeController> _logger;
-
-        public ProductController(ILogger<HomeController> logger)
+        
+        public ProductController(ILogger<HomeController> logger, StoreContext context)
         {
             _logger = logger;
-            storeService = new Services.StoreService();
+            _context = context;
+            storeService = new Services.StoreService(_context);
         }
 
         public IActionResult Index()
@@ -26,6 +27,7 @@ namespace Store.Controllers
         public List<Product> GetAllProducts()
         {
             var products = storeService.GetProducts();
+            //_context.SaveChanges();
             return products;
         }
         public IActionResult Edit(int id)
@@ -35,6 +37,7 @@ namespace Store.Controllers
             {
                 return View("NotFound");
             }
+            //_context.SaveChanges();
             return View(productDetails);
         }
 
@@ -46,6 +49,7 @@ namespace Store.Controllers
                 return View(product);
             }
             storeService.UpdateProd(id, product);
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Details(int id)
@@ -77,6 +81,7 @@ namespace Store.Controllers
                 return View("NotFound");
             }
             storeService.DeleteProductById(id);
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 

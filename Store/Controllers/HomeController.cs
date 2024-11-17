@@ -23,7 +23,7 @@ namespace Store.Controllers
             return View();
         }
 
-        public IActionResult Sq()
+        public IActionResult AboutUs()
         {
             return View();
         }

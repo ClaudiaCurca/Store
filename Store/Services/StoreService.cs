@@ -1,54 +1,61 @@
-﻿using Store.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Store.Models;
 using System.Linq;
 
 namespace Store.Services
 {
     public class StoreService
     {
-        static List<Product> products = new List<Product>
+        //static List<Product> products = new List<Product>
+        //{
+        //    new Product{Id=1,Name="cercei",Price=15},
+        //    new Product{Id=2,Name="colier",Price=50},
+        //    new Product{Id=3,Name="brosa",Price=25}
+        //};
+        StoreContext _context;
+        public StoreService(StoreContext context) 
         {
-            new Product{Id=1,Name="cercei",Price=15},
-            new Product{Id=2,Name="colier",Price=50},
-            new Product{Id=3,Name="brosa",Price=25}
-        };
-
-        public StoreService() { }
+           _context = context;
+        }
         public Product CreateProd(Product product)
         {
-            products.Add(product);
+            _context.Products.Add(product);
             return product;
         }
 
         public bool UpdateProd(int id, Product product)
         {
-            var prod = products.FirstOrDefault(x => x.Id == id);
+            var prod = GetProductById(id);
             if (prod != null) 
             {
                 prod.Name=product.Name;
                 prod.Price=product.Price;
                 return true;
             }
-
+            
             return false;
         }
 
         public List<Product> GetProducts() 
         { 
-            return products;
+            List<Product> prods = _context.Products.ToList();
+
+            return prods;
         }
 
         public Product GetProductById(int id)
         {
-            var prod = products.FirstOrDefault(p => p.Id == id);
+            var prod = _context.Products.FirstOrDefault(x => x.Id == id);
+
             return prod;
         }
 
         public bool DeleteProductById(int id)
         {
-            var prod= products.FirstOrDefault(x => x.Id == id);
+            var prod= GetProductById(id);
             if (prod != null) 
             { 
-                products.Remove(prod);
+                _context.Products.Remove(prod);
                 return true;
             }
 
