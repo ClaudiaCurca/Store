@@ -1,9 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Models;
 using System.Diagnostics;
 
 namespace Store.Controllers
 {
+    //[Authorize]
+    //[ApiController]
+    //[Route("[controller]")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

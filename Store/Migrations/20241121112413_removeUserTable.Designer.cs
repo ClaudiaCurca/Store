@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Store;
 using Store.Data;
 
 #nullable disable
@@ -11,8 +10,8 @@ using Store.Data;
 namespace Store.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20241116135800_initial")]
-    partial class initial
+    [Migration("20241121112413_removeUserTable")]
+    partial class removeUserTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

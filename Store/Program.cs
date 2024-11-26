@@ -1,13 +1,47 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Store;
-using System;
-using System.Configuration;
+using Store.Authentication;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// database connection string SQLLIte
+// database connection string SQLite
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
-builder.Services.AddDbContext<Store.StoreContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<Store.Data.StoreContext>(options => options.UseSqlite(connectionString));
+
+//database sql authentication
+builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddIdentityCore<AppUser>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    var secret = builder.Configuration["JwtConfig:Secret"];
+    var issuer = builder.Configuration["JwtConfig:ValidIssuer"];
+    var audience = builder.Configuration["JwtConfig:ValidAudiences"];
+    if (secret is null || issuer is null || audience is null)
+{
+        throw new ApplicationException("Jwt is not set in the configuration");
+    }
+options.SaveToken = true;
+options.RequireHttpsMetadata = false;
+options.TokenValidationParameters = new TokenValidationParameters()
+{
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidAudience = audience,
+    ValidIssuer = issuer,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+};
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -21,6 +55,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -28,7 +63,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-
+app.UseAuthentication();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

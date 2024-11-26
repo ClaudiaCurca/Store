@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Store.Data;
 using Store.Models;
 
 namespace Store.Controllers

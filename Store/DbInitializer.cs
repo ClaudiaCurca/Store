@@ -1,10 +1,15 @@
-﻿using Store.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Store.Authentication;
+using Store.Data;
+using Store.Models;
 
 namespace Store
 {
     public class DbInitializer
     {
-        public static void Seed(IApplicationBuilder applicationBuilder)
+
+
+public static void Seed(IApplicationBuilder applicationBuilder)
         {
             using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
             {
@@ -36,7 +41,26 @@ namespace Store
                     context.SaveChanges();
                 }
 
+
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                dbContext.Database.EnsureCreated();
+
+                if (!dbContext.Users.Any())
+                {
+                    dbContext.Users.AddRange(new List<AppUser>()
+                    {
+                        new AppUser()
+                        {
+                            FirstName = "Claudia",
+                            LastName = "Curca",
+                 
+                        }
+                    });
+                }
             }
+            
+              
+            
 
         }
     }
