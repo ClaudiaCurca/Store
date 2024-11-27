@@ -4,7 +4,6 @@ using Store.Models;
 
 namespace Store.Controllers
 {
-
     public class ProductController : Controller
     {
         public readonly StoreContext _context;
@@ -20,7 +19,7 @@ namespace Store.Controllers
 
         public IActionResult Index()
         {
-            var allProducts = storeService.GetProducts();
+            var allProducts = storeService.GetAll();
             return View(allProducts);
         }
         
@@ -35,19 +34,19 @@ namespace Store.Controllers
 			{
 				return View(product);
 			}
-            storeService.CreateProd(product);
+            storeService.Create(product);
 			return RedirectToAction(nameof(Index));
 		}
 
 		[HttpGet]
         public List<Product> GetAllProducts()
         {
-            var products = storeService.GetProducts();
+            var products = storeService.GetAll();
             return products;
         }
         public IActionResult Edit(int id)
         {
-            var productDetails = storeService.GetProductById(id);
+            var productDetails = storeService.GetById(id);
             if (productDetails == null)
             {
                 return View("NotFound");
@@ -62,12 +61,12 @@ namespace Store.Controllers
             {
                 return View(product);
             }
-            storeService.UpdateProd(id, product);
+            storeService.Update(id, product);
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Details(int id)
         {
-            var productDetails = storeService.GetProductById(id);
+            var productDetails = storeService.GetById(id);
             if (productDetails == null)
             {
                 return View("NotFound");
@@ -77,7 +76,7 @@ namespace Store.Controllers
 
         public IActionResult Delete(int id)
         {
-            var cinemaDetails = storeService.GetProductById(id);
+            var cinemaDetails = storeService.GetById(id);
             if (cinemaDetails == null)
             {
                 return View("NotFound");
@@ -88,12 +87,12 @@ namespace Store.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var cinemaDetails = storeService.GetProductById(id);
+            var cinemaDetails = storeService.GetById(id);
             if (cinemaDetails == null)
             {
                 return View("NotFound");
             }
-            storeService.DeleteProductById(id);
+            storeService.DeleteById(id);
             return RedirectToAction(nameof(Index));
         }
 

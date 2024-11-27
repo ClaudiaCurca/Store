@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Store.Services
 {
-    public class StoreService
+    public class StoreService : IServices<Product>
     {
         //static List<Product> products = new List<Product>
         //{
@@ -18,16 +18,16 @@ namespace Store.Services
         {
            _context = context;
         }
-        public Product CreateProd(Product product)
+        public Product Create(Product product)
         {
             _context.Products.Add(product);
             _context.SaveChanges();
             return product;
         }
 
-        public bool UpdateProd(int id, Product product)
+        public bool Update(int id, Product product)
         {
-            var prod = GetProductById(id);
+            var prod = GetById(id);
             if (prod != null) 
             {
                 prod.Name=product.Name;
@@ -39,23 +39,23 @@ namespace Store.Services
             return false;
         }
 
-        public List<Product> GetProducts() 
+        public List<Product> GetAll() 
         { 
             List<Product> prods = _context.Products.ToList();
 
             return prods;
         }
 
-        public Product GetProductById(int id)
+        public Product GetById(int id)
         {
             var prod = _context.Products.FirstOrDefault(x => x.Id == id);
 
             return prod;
         }
 
-        public bool DeleteProductById(int id)
+        public bool DeleteById(int id)
         {
-            var prod= GetProductById(id);
+            var prod= GetById(id);
             if (prod != null) 
             { 
                 _context.Products.Remove(prod);
@@ -65,5 +65,6 @@ namespace Store.Services
 
             return false;
         }
+
     }
 }
