@@ -1,4 +1,5 @@
-﻿using Store.Data;
+﻿using Store.Authentication;
+using Store.Data;
 using Store.Models;
 
 namespace Store
@@ -39,8 +40,27 @@ namespace Store
 					context.SaveChanges();
 				}
 
+                var AuthContext = serviceScope.ServiceProvider.GetService<AuthenticationDbContext>();
+                context.Database.EnsureCreated();
+                if (!AuthContext.UserAccounts.Any())
+                {
+                    AuthContext.UserAccounts.AddRange(new List<UserAccount>()
+                    {
+                        new UserAccount()
+                        {
+                            Id = 1,
+                            Name = "Claudia",
+							Email = "claudia_curca@yahoo.com",
+							UserName="ClaudiaC",
+							Password="catalin"
+                        }
+                       
+                    });
+                    AuthContext.SaveChanges();
+                }
 
-			}
+
+            }
 
 
 

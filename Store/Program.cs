@@ -1,15 +1,19 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Store;
+using Store.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // database connection string SQLite
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
 builder.Services.AddDbContext<Store.Data.StoreContext>(options => options.UseSqlite(connectionString));
-
+var authenticationConnectionString = builder.Configuration.GetConnectionString("AuthenticationConnectionString");
+builder.Services.AddDbContext<AuthenticationDbContext>(options => options.UseSqlServer(authenticationConnectionString));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
 var app = builder.Build();
 
@@ -27,9 +31,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseAuthentication();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
